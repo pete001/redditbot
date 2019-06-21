@@ -46,5 +46,23 @@ class Reddit extends RedditApiHandler
 		                                                                                              ] ), $this->token ), null, $this->token );
 	}
 
-
+    /**
+     * Grab info about a comment
+     *
+     * @param $subreddit
+     * @param $id
+     *
+     * @throws \Exception
+     *
+     * @return mixed
+     */
+    public function fetchInfo($subreddit, $id)
+    {
+        return ApiResponse::getInstance('comments', $this->send(self::API_BASE_URL . '/r/' . $subreddit
+            . '/api/info/?' . http_build_query([
+                'cb'    => time(),
+                'limit' => 1,
+                'id'    => $id,
+            ]), $this->token), null, $this->token);
+    }
 }
