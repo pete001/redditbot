@@ -39,11 +39,13 @@ class Reddit extends RedditApiHandler
 	{
 
 		return ApiResponse::getInstance( 'comments', $this->send( self::API_BASE_URL . '/r/' . $subreddit
-		                                                          . '/comments/?' . http_build_query( [
-			                                                                                              'cb'    => time(),
-			                                                                                              'sort'  => $sortBy,
-			                                                                                              'limit' => $limit,
-		                                                                                              ] ), $this->token ), null, $this->token );
+            . '/comments/?' . http_build_query( [
+                'cb'    => time(),
+                'sort'  => $sortBy,
+                'limit' => $limit,
+                'query' => '!bottle',
+                'show' => 'all',
+            ] ), $this->token ), null, $this->token );
 	}
 
     /**

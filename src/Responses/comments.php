@@ -56,7 +56,7 @@ class Comments extends Collection
         self::each( function ( $comment ) use ( $lastRun, &$newItems, &$thisRun ) {
 
             /** @var \Redditbot\Responses\comments\Comment $comment */
-            if (( $comment->edited && Carbon::createFromTimestamp( $comment->edited )->greaterThan( $lastRun ) )
+            if (( isset($comment->edited) && $comment->edited && Carbon::createFromTimestamp( $comment->edited )->greaterThan( $lastRun ) )
                 || $comment->createdUtc->greaterThan( $lastRun ) ) {
 
                 // Don't react to this bot's own submissions
