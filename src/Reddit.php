@@ -43,7 +43,7 @@ class Reddit extends RedditApiHandler
                 'cb'    => time(),
                 'sort'  => $sortBy,
                 'limit' => $limit,
-                'query' => '!bottle',
+                'query' => 'bottle',
                 'show' => 'all',
             ] ), $this->token ), null, $this->token );
 	}
