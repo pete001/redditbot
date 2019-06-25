@@ -55,22 +55,24 @@ class Comments extends Collection
 
         self::each( function ( $comment ) use ( $lastRun, &$newItems, &$thisRun ) {
 
-            /** @var \Redditbot\Responses\comments\Comment $comment */
-            if (( isset($comment->edited) && $comment->edited && Carbon::createFromTimestamp( $comment->edited )->greaterThan( $lastRun ) )
-                || $comment->createdUtc->greaterThan( $lastRun ) ) {
-
-                // Don't react to this bot's own submissions
-                if ( $comment->author !== config( 'redditbot.username' ) ) {
-                    $newItems->put( $comment->id, $comment );
-
-                    // We want to store the last time of the comment for this subreddit
-                    if ($comment->createdUtc->greaterThan( $thisRun )) {
-                        $thisRun = $comment->createdUtc;
+            // Make sure this isnt an edit
+            if (isset($comment->edited) && $comment->edited === false) {
+                // Lets not repeat a payment
+                if (isset($comment->createdUtc) && $comment->createdUtc->greaterThan($lastRun)) {
+                    // Don't react to this bot's own submissions
+                    if ($comment->author !== config('redditbot.username')) {
+                        // We have a valid comment
+                        $newItems->put($comment->id, $comment);
+                        // We want to store the last time of the comment for this subreddit
+                        if ($comment->createdUtc->greaterThan($thisRun)) {
+                            $thisRun = $comment->createdUtc;
+                        }
                     }
                 }
             }
-        } );
+        });
 
+        // Update the cache if we found valid entries
         if ($newItems->count()) {
             Cache::forever("yomo.redditbot.lastrun.$sub", $thisRun);
         }
